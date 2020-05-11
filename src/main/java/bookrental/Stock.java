@@ -1,7 +1,16 @@
 package bookrental;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.util.MimeTypeUtils;
+
 import java.util.List;
 
 @Entity
@@ -17,9 +26,30 @@ public class Stock {
     @PostPersist
     public void onPostPersist(){
         Incomed incomed = new Incomed();
-        BeanUtils.copyProperties(this, incomed);
-        incomed.publishAfterCommit();
+        incomed.setId(this.getId());
+        incomed.setBookid(this.getBookid());
+        incomed.setQty(incomed.getQty() + this.getQty());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = null;
 
+        try {
+            json = objectMapper.writeValueAsString(incomed);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JSON format exception", e);
+        }
+
+
+        Processor processor = Application.applicationContext.getBean(Processor.class);
+        MessageChannel outputChannel = processor.output();
+
+        outputChannel.send(MessageBuilder
+                .withPayload(json)
+                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
+                .build());
+
+
+        //BeanUtils.copyProperties(this, incomed);
+        //incomed.publishAfterCommit();
 
     }
 
