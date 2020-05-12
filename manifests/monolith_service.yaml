@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: monolith2
+  name: stock-svc
   labels:
-    app: monolith2
+    app: stock
 spec:
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8082
+      targetPort: 8082
   selector:
-    app: monolith2
+    app: stock
