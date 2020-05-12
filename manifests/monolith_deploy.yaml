@@ -13,4 +13,4 @@ spec:
         - name: stock
           image: ccteam4acr.azurecr.io/stock
           ports:
-            - containerPort: 8080
+            - containerPort: 8082
