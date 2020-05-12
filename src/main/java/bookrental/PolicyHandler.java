@@ -18,7 +18,7 @@ public class PolicyHandler{
     @StreamListener(KafkaProcessor.INPUT)
     public void wheneverRequested_Checkstock(@Payload Requested requested){
         System.out.println("============================= Kafka : " + requested);
-        if(requested.getEventType().equals("requested")) {
+        if(requested.isMe()) {
             System.out.println("=============================");
             System.out.println("requested");
             stockRepository.findByBookid(requested.getBookid())
@@ -26,8 +26,8 @@ public class PolicyHandler{
                             stock -> {
                                 long qty = stock.getQty();
 
-                                if(qty >= 1){
-                                    stock.setQty(qty-1);
+                                if (qty >= 1) {
+                                    stock.setQty(qty - 1);
                                     stock.setStatus("revSucceeded");
                                     stockRepository.save(stock);
                                     System.out.println("set Stock -1");
@@ -38,14 +38,14 @@ public class PolicyHandler{
                             }
                     )
             ;
-
-            System.out.println("=============================");
         }
+            System.out.println("=============================");
+
     }
     @StreamListener(KafkaProcessor.INPUT)
     public void wheneverCanceled_Cancelstock(@Payload Canceled canceled){
 
-        if(canceled.getEventType().equals("canceled")) {
+        if(canceled.isMe()) {
             System.out.println("=============================");
             System.out.println("canceled");
 

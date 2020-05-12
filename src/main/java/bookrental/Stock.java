@@ -63,16 +63,73 @@ public class Stock {
 
         if(status.equals("revSucceeded")){
             Revsuccessed revsuccessed = new Revsuccessed();
-            BeanUtils.copyProperties(this, revsuccessed);
-            revsuccessed.publishAfterCommit();
+
+            revsuccessed.setId(this.getId());
+            revsuccessed.setBookid(this.getBookid());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = null;
+
+            try {
+                json = objectMapper.writeValueAsString(revsuccessed);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("JSON format exception", e);
+            }
+
+
+            KafkaProcessor processor = Application.applicationContext.getBean(KafkaProcessor.class);
+            MessageChannel outputChannel = processor.outboundTopic();
+
+            outputChannel.send(MessageBuilder
+                    .withPayload(json)
+                    .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
+                    .build());
+
+
+            /*BeanUtils.copyProperties(this, revsuccessed);
+            revsuccessed.publishAfterCommit();*/
         } else if(status.equals("revFailed")){
             Revfailed revfailed = new Revfailed();
-            BeanUtils.copyProperties(this, revfailed);
-            revfailed.publishAfterCommit();
+
+            revfailed.setId(this.getId());
+            revfailed.setBookid(this.getBookid());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = null;
+
+            try {
+                json = objectMapper.writeValueAsString(revfailed);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("JSON format exception", e);
+            }
+
+
+            KafkaProcessor processor = Application.applicationContext.getBean(KafkaProcessor.class);
+            MessageChannel outputChannel = processor.outboundTopic();
+
+            outputChannel.send(MessageBuilder
+                    .withPayload(json)
+                    .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
+                    .build());
         } else if(status.equals("revCanceled")) {
             Revcanceled revcanceled = new Revcanceled();
-            BeanUtils.copyProperties(this, revcanceled);
-            revcanceled.publishAfterCommit();
+            revcanceled.setId(this.getId());
+            revcanceled.setBookid(this.getBookid());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = null;
+
+            try {
+                json = objectMapper.writeValueAsString(revcanceled);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("JSON format exception", e);
+            }
+
+
+            KafkaProcessor processor = Application.applicationContext.getBean(KafkaProcessor.class);
+            MessageChannel outputChannel = processor.outboundTopic();
+
+            outputChannel.send(MessageBuilder
+                    .withPayload(json)
+                    .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
+                    .build());
         }
 
     }
