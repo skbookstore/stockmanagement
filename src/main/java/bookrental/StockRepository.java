@@ -1,8 +1,10 @@
 package bookrental;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface StockRepository extends PagingAndSortingRepository<Stock, String>{
+import java.util.Optional;
 
+public interface StockRepository extends CrudRepository<Stock, Long>{
+    Optional<Stock> findByBookId(String BookId);
 
 }

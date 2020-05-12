@@ -23,9 +23,11 @@ public class Stock {
     private Long id;
     private String bookid;
     private Long qty;
+    private String status;
 
     @PostPersist
     public void onPostPersist(){
+        System.out.println("==============onPostPersist ====== bookid : "+getBookid());
         Incomed incomed = new Incomed();
         incomed.setId(this.getId());
         incomed.setBookid(this.getBookid());
@@ -56,20 +58,22 @@ public class Stock {
 
     @PostUpdate
     public void onPostUpdate(){
-        Revsuccessed revsuccessed = new Revsuccessed();
-        BeanUtils.copyProperties(this, revsuccessed);
-        revsuccessed.publishAfterCommit();
+        String status = this.getStatus();
+        System.out.println("==============onPostUpdate ====== status : "+status);
 
-
-        Revfailed revfailed = new Revfailed();
-        BeanUtils.copyProperties(this, revfailed);
-        revfailed.publishAfterCommit();
-
-
-        Revcanceled revcanceled = new Revcanceled();
-        BeanUtils.copyProperties(this, revcanceled);
-        revcanceled.publishAfterCommit();
-
+        if(status.equals("revSucceeded")){
+            Revsuccessed revsuccessed = new Revsuccessed();
+            BeanUtils.copyProperties(this, revsuccessed);
+            revsuccessed.publishAfterCommit();
+        } else if(status.equals("revFailed")){
+            Revfailed revfailed = new Revfailed();
+            BeanUtils.copyProperties(this, revfailed);
+            revfailed.publishAfterCommit();
+        } else if(status.equals("revCanceled")) {
+            Revcanceled revcanceled = new Revcanceled();
+            BeanUtils.copyProperties(this, revcanceled);
+            revcanceled.publishAfterCommit();
+        }
 
     }
 
@@ -94,6 +98,14 @@ public class Stock {
 
     public void setQty(Long qty) {
         this.qty = qty;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 
