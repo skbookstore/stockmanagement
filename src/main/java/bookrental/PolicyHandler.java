@@ -21,7 +21,7 @@ public class PolicyHandler{
         if(requested.getEventType().equals("requested")) {
             System.out.println("=============================");
             System.out.println("requested");
-            stockRepository.findByBookId(requested.getBookid())
+            stockRepository.findByBookid(requested.getBookid())
                     .ifPresent(
                             stock -> {
                                 long qty = stock.getQty();
@@ -49,7 +49,7 @@ public class PolicyHandler{
             System.out.println("=============================");
             System.out.println("canceled");
 
-            stockRepository.findByBookId(canceled.getBookid())
+            stockRepository.findByBookid(canceled.getBookid())
                     .ifPresent(
                             stock -> {
                                 stock.setQty(stock.getQty() + 1);
