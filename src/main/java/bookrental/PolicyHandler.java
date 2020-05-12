@@ -21,17 +21,22 @@ public class PolicyHandler{
         if(requested.getEventType().equals("requested")) {
             System.out.println("=============================");
             System.out.println("requested");
-            Stock stock = new Stock();
-            long qty = stock.getQty();
+            stockRepository.findById(requested.getBookid())
+                    .ifPresent(
+                            stock -> {
+                                long qty = stock.getQty();
 
-            if(qty > 1){
-                stockRepository.save(stock);
-                stock.setBookid(requested.getBookid());
-                stock.setQty(qty-1);
-                System.out.println("set Stock -1");
-            } else {
-                System.out.println("stock-out");
-            }
+                                if(qty > 1){
+                                    stock.setQty(qty-1);
+                                    stockRepository.save(stock);
+                                    System.out.println("set Stock -1");
+                                } else {
+                                    System.out.println("stock-out");
+                                }
+                            }
+                    )
+            ;
+
             System.out.println("=============================");
         }
     }
@@ -41,10 +46,15 @@ public class PolicyHandler{
         if(canceled.getEventType().equals("canceled")) {
             System.out.println("=============================");
             System.out.println("canceled");
-            Stock stock = new Stock();
-            long qty = stock.getQty();
 
-            stock.setQty(qty+1);
+            stockRepository.findById(canceled.getBookid())
+                    .ifPresent(
+                            stock -> {
+                                stock.setQty(stock.getQty() + 1);
+                                stockRepository.save(stock);
+                            }
+                    )
+            ;
             System.out.println("set Stock +1");
             System.out.println("=============================");
         }

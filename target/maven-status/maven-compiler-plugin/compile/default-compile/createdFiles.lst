@@ -1,0 +1,14 @@
+bookrental\Canceled.class
+bookrental\Stock.class
+bookrental\Revsuccessed.class
+bookrental\AbstractEvent$1.class
+bookrental\AbstractEvent.class
+bookrental\Revfailed.class
+bookrental\StockController.class
+bookrental\Application.class
+bookrental\StockRepository.class
+bookrental\PolicyHandler.class
+bookrental\Requested.class
+bookrental\config\kafka\KafkaProcessor.class
+bookrental\Revcanceled.class
+bookrental\Incomed.class
