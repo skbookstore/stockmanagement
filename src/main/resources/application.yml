@@ -45,7 +45,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: my-kafka.kafka.svc.cluster.local:9092
+          brokers: my-kafka2.default.svc.cluster.local:9092
       bindings:
         event-in:
           group: stockmanagement
