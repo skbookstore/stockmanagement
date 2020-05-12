@@ -26,7 +26,7 @@ public class PolicyHandler{
                             stock -> {
                                 long qty = stock.getQty();
 
-                                if(qty > 1){
+                                if(qty >= 1){
                                     stock.setQty(qty-1);
                                     stock.setStatus("revSucceeded");
                                     stockRepository.save(stock);
