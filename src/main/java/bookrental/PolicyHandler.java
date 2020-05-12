@@ -33,6 +33,7 @@ public class PolicyHandler{
                                     System.out.println("set Stock -1");
                                 } else {
                                     stock.setStatus("revFailed");
+                                    stockRepository.save(stock);
                                     System.out.println("stock-out");
                                 }
                             }
